@@ -4,4 +4,4 @@ This repository contains my solutions to the xv6 labs.
 
 ## Implemented Utilities
 
-- [find and xargs utilities (`lab_utility` branch)](https://github.com/SILENT-GUO/my-xv6/tree/lab_utility)
+- [lab utilities (`lab_utility` branch)](https://github.com/SILENT-GUO/my-xv6/tree/lab_utility)

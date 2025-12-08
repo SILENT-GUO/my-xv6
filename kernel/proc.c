@@ -294,6 +294,8 @@ fork(void)
   pid = np->pid;
 
   np->state = RUNNABLE;
+  // share the trace mask;
+  np->trace_mask = p->trace_mask;
 
   release(&np->lock);
 
@@ -692,4 +694,16 @@ procdump(void)
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
   }
+}
+
+int
+proc_count(void){
+  struct proc *p;
+  int count = 0;
+  for(p = &proc[0]; p < &proc[NPROC]; ++p){
+    if(p->state != UNUSED){
+      count ++;
+    }
+  }
+  return count;
 }

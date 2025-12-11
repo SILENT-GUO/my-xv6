@@ -5,7 +5,8 @@
 #include "riscv.h"
 #include "defs.h"
 #include "fs.h"
-
+#include "spinlock.h"
+#include "proc.h"
 /*
  * the kernel's page table.
  */
@@ -47,12 +48,42 @@ kvminit()
   kvmmap(TRAMPOLINE, (uint64)trampoline, PGSIZE, PTE_R | PTE_X);
 }
 
+// create the kernel page table for a given process
+// return 0 if failed
+pagetable_t
+process_kpagetable_init(){
+  pagetable_t kpagetable;
+  kpagetable = (pagetable_t) uvmcreate();
+  if(kpagetable == 0) return 0;
+  
+  // copy the mapping of kernel pagetable;
+  mappages(kpagetable, UART0, PGSIZE, UART0, PTE_R | PTE_W);
+  mappages(kpagetable, VIRTIO0, PGSIZE, VIRTIO0, PTE_R | PTE_W);
+  mappages(kpagetable, CLINT, 0x10000, CLINT, PTE_R | PTE_W);
+  mappages(kpagetable, PLIC, 0x400000, PLIC, PTE_R | PTE_W);
+  mappages(kpagetable, KERNBASE, (uint64)etext-KERNBASE, KERNBASE, PTE_R | PTE_X);
+  mappages(kpagetable, (uint64)etext, PHYSTOP-(uint64)etext, (uint64)etext, PTE_R | PTE_W);
+  mappages(kpagetable, TRAMPOLINE, PGSIZE, (uint64)trampoline, PTE_R | PTE_X);
+  
+
+  return kpagetable;
+
+}
+
 // Switch h/w page table register to the kernel's page table,
 // and enable paging.
 void
 kvminithart()
 {
   w_satp(MAKE_SATP(kernel_pagetable));
+  sfence_vma();
+}
+
+// load param pagetable to SATP register
+void
+procinithart(pagetable_t pagetable)
+{
+  w_satp(MAKE_SATP(pagetable));
   sfence_vma();
 }
 
@@ -131,8 +162,10 @@ kvmpa(uint64 va)
   uint64 off = va % PGSIZE;
   pte_t *pte;
   uint64 pa;
+
+  struct proc *current_proc = myproc();
   
-  pte = walk(kernel_pagetable, va, 0);
+  pte = walk(current_proc->kpagetable, va, 0);
   if(pte == 0)
     panic("kvmpa");
   if((*pte & PTE_V) == 0)
@@ -439,4 +472,34 @@ copyinstr(pagetable_t pagetable, char *dst, uint64 srcva, uint64 max)
   } else {
     return -1;
   }
+}
+
+void vmprint_helper(pagetable_t pagetable, int level) {
+  if(level == 1){
+    printf("page table %p\n", pagetable);
+  }
+  for(int i = 0; i < 512; ++i){ // 4k / 8 bytes = 512
+    pte_t pte = pagetable[i];
+    if(pte & PTE_V){
+      uint64 pa = PTE2PA(pte);
+      for(int i = 0; i < level; ++i){
+        if(i == level - 1){
+          printf("..");
+        }else{
+          printf(".. ");
+        }
+      }
+      printf("%d: pte %p pa %p\n", i, pte, pa);
+      if ((pte & (PTE_R | PTE_W | PTE_X)) == 0){
+        // non-leaf node, go recurse.
+        vmprint_helper((pagetable_t)pa,  level + 1);
+      }
+    }
+
+  }
+}
+
+void vmprint(pagetable_t pagetable) {
+  // need to recursively print the page table
+  vmprint_helper(pagetable, 1);
 }

@@ -255,6 +255,9 @@ userinit(void)
   // and data into it.
   uvminit(p->pagetable, initcode, sizeof(initcode));
   p->sz = PGSIZE;
+  if(uvmcopypt(p->pagetable, p->kpagetable, p->sz, 0) < 0){
+    panic("userinit: fail to copy user pagetable to kernel pagetable of a process");
+  }
 
   // prepare for the very first "return" from kernel to user.
   p->trapframe->epc = 0;      // user program counter
@@ -281,8 +284,14 @@ growproc(int n)
     if((sz = uvmalloc(p->pagetable, sz, sz + n)) == 0) {
       return -1;
     }
+    if(uvmcopypt(p->pagetable, p->kpagetable, sz, sz-n) < 0){
+      sz = uvmdealloc(p->pagetable, sz, sz-n);
+      return -1;
+    }
   } else if(n < 0){
     sz = uvmdealloc(p->pagetable, sz, sz + n);
+    int npages = (PGROUNDUP(sz-n) - PGROUNDUP(sz)) / PGSIZE;
+    uvmunmap(p->kpagetable, PGROUNDUP(sz), npages, 0);
   }
   p->sz = sz;
   return 0;
@@ -304,6 +313,13 @@ fork(void)
 
   // Copy user memory from parent to child.
   if(uvmcopy(p->pagetable, np->pagetable, p->sz) < 0){
+    freeproc(np);
+    release(&np->lock);
+    return -1;
+  }
+
+  // copy np's user page table to kernel page table
+  if(uvmcopypt(np->pagetable, np->kpagetable, p->sz, 0) < 0){
     freeproc(np);
     release(&np->lock);
     return -1;

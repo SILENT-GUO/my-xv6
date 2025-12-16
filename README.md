@@ -9,9 +9,11 @@
 2. 云端：Alibaba Cloud ECS Instance (2核2G，即99计划可买的实例) Ubuntu 20.04
 以上为本人的实验环境，QEMU install默认版本是适配的，不需要自行解压和安装
 
-## 已完成分支 (Notes.md待更新)
+## 已完成分支 
 
-- [lab utilities](https://github.com/SILENT-GUO/my-xv6/tree/lab_utility)
-- [lab syscalls](https://github.com/SILENT-GUO/my-xv6/tree/lab_syscalls)
-- [lab_pgtbl](https://github.com/SILENT-GUO/my-xv6/tree/pgtbl)
+| 实验名称         | 仓库链接                                                                 | 状态             |
+|------------------|--------------------------------------------------------------------------|------------------|
+| Lab Utilities    | [GitHub - lab_utility](https://github.com/SILENT-GUO/my-xv6/tree/lab_utility)   | 实验已完成，`Notes.md` 待更新 |
+| Lab Syscalls     | [GitHub - lab_syscalls](https://github.com/SILENT-GUO/my-xv6/tree/lab_syscalls)  | 实验已完成，`Notes.md` 待更新 |
+| Lab Page Table   | [GitHub - pgtbl](https://github.com/SILENT-GUO/my-xv6/tree/pgtbl)                | 实验已完成，`Notes.md` 待更新 |
 

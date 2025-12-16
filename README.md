@@ -9,7 +9,7 @@
 2. 云端：Alibaba Cloud ECS Instance (2核2G，即99计划可买的实例) Ubuntu 20.04
 以上为本人的实验环境，QEMU install默认版本是适配的，不需要自行解压和安装
 
-## 已完成分支
+## 已完成分支 (Notes.md待更新)
 
 - [lab utilities](https://github.com/SILENT-GUO/my-xv6/tree/lab_utility)
 - [lab syscalls](https://github.com/SILENT-GUO/my-xv6/tree/lab_syscalls)

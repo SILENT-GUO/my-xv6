@@ -1,7 +1,7 @@
 # xv6 Labs
 
 这个仓库记录本人对MIT 6.s081 2020 Lab的实验， MIT 6.s081 2020版本源代码仓库克隆：git clone git://g.csail.mit.edu/xv6-labs-2020。
-2020版本的中文xv6文档参考 https://github.com/zhenyu-zang/xv6-riscv-book-Chinese，
+2020版本的中文xv6文档参考 [2020中文xv6文档](https://github.com/zhenyu-zang/xv6-riscv-book-Chinese)，
 但是通篇阅读下来内容多，且个别地方有小错误，可以看每个分支中的Notes.md，其中记录了我对于xv6 book内容的一些理解，结合代码进行理解，并会给出xv6 lab的一些思路
 
 环境验证：

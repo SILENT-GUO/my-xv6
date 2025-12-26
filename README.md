@@ -13,7 +13,7 @@
 
 | 实验名称         | 仓库链接                                                                 | 状态             |
 |------------------|--------------------------------------------------------------------------|------------------|
-| Lab Utilities    | [GitHub - lab_utility](https://github.com/SILENT-GUO/my-xv6/tree/lab_utility)   | 实验已完成，`Notes.md` 待更新 |
+| Lab Utilities    | [GitHub - lab_utility](https://github.com/SILENT-GUO/my-xv6/tree/lab_utility)   | 实验已完成，笔记已更新 |
 | Lab Syscalls     | [GitHub - lab_syscalls](https://github.com/SILENT-GUO/my-xv6/tree/lab_syscalls)  | 实验已完成，`Notes.md` 待更新 |
 | Lab Page Table   | [GitHub - pgtbl](https://github.com/SILENT-GUO/my-xv6/tree/pgtbl)                | 实验已完成，`Notes.md` 待更新 |
 
